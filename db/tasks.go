@@ -22,7 +22,7 @@ func Init(dbPath string) error {
 		return err
 	}
 	return db.Update(func(tx *bolt.Tx) error {
-		_, err := tx. (taskBucket)
+		_, err := tx.CreateBucketIfNotExists(taskBucket)
 		return err
 	})
 }
@@ -34,7 +34,7 @@ func CreateTask(task string) (int, error) {
 		id64, _ := b.NextSequence()
 		id = int(id64)
 		key := itob(int(id64))
-		b.Put(key, []byte(task))
+		return b.Put(key, []byte(task))
 	})
 	if err != nil {
 		return -1, err
@@ -42,8 +42,29 @@ func CreateTask(task string) (int, error) {
 	return id, nil
 }
 
+func allTasks() ([]Task, error) {
+	var tasks []Task
+
+	err := db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket(taskBucket)
+		c := b.Cursor()
+		for k, v := c.First(); k != nil; k, v = c.Next() {
+			tasks = append(tasks, Task{
+				key: btoi(k),
+				value: string(v),
+			})
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return tasks, nil
+}
+
 func itob(v int) []byte {
-	b := make([]byte)
+	b := make([]byte, 8)
 	binary.BigEndian.PutUint64(b, uint64(v))
 	return b
 }
