@@ -30,7 +30,7 @@ var doCmd = &cobra.Command{
 		}
 
 		for _, id := range ids {
-			if id <= 0 || id > len(ids) {
+			if id <= 0 || id > len(tasks) {
 				fmt.Println("Invalid task number:", id)
 				continue
 			}
