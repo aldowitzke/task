@@ -20,6 +20,6 @@ func main() {
 func must(err error) {
 	if err != nil {
 		fmt.Println(err.Error())
+		os.Exit(1)
 	}
-	os.Exit(1)
 }
