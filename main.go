@@ -5,8 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/aldowitzke/gophercises/task/cmd"
-	"github.com/aldowitzke/gophercises/task/db"
+	"github.com/aldowitzke/task/cmd"
+	"github.com/aldowitzke/task/db"
 	"github.com/mitchellh/go-homedir"
 )
 
